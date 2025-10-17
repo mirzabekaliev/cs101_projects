@@ -1,0 +1,94 @@
+print("="*50)
+print("          Smart Shopping Cart Calculator")
+print("="*50)
+
+print("--- Please enter order details ---")
+
+customer_name = input("Enter customer name: ")
+has_student_id_input = input("Does the customer have a student ID? (yes/no): ").lower()
+order_time = int(input("Enter order time (hour in 24-hour format, e.g., 14 for 2 PM): "))
+
+print("\n--- Dish #1 ---")
+dish1_name = input(f"Enter name for dish 1: ")
+dish1_price = float(input(f"Enter price for {dish1_name}: "))
+dish1_quantity = int(input(f"Enter quantity for {dish1_name}: "))
+
+print("\n--- Dish #2 ---")
+dish2_name = input(f"Enter name for dish 2: ")
+dish2_price = float(input(f"Enter price for {dish2_name}: "))
+dish2_quantity = int(input(f"Enter quantity for {dish2_name}: "))
+
+print("\n--- Dish #3 ---")
+dish3_name = input(f"Enter name for dish 3: ")
+dish3_price = float(input(f"Enter price for {dish3_name}: "))
+dish3_quantity = int(input(f"Enter quantity for {dish3_name}: "))
+
+dish1_total = dish1_price * dish1_quantity
+dish2_total = dish2_price * dish2_quantity
+dish3_total = dish3_price * dish3_quantity
+
+subtotal_before_discounts = dish1_total + dish2_total + dish3_total
+
+is_eligible_for_student_discount = (has_student_id_input == 'yes')
+is_eligible_for_happy_hour = (14 <= order_time < 17)
+is_eligible_for_large_order = (subtotal_before_discounts >= 150000)
+
+student_discount_amount = is_eligible_for_student_discount * 0.15 * subtotal_before_discounts
+happy_hour_discount_amount = is_eligible_for_happy_hour * 0.20 * subtotal_before_discounts
+large_order_discount_amount = is_eligible_for_large_order * 0.05 * subtotal_before_discounts
+
+is_student_discount_dominant = student_discount_amount > happy_hour_discount_amount
+is_happy_hour_applied = (student_discount_amount <= happy_hour_discount_amount) and (happy_hour_discount_amount > 0)
+is_no_main_discount = not (is_student_discount_dominant or is_happy_hour_applied)
+
+main_discount = (is_student_discount_dominant * student_discount_amount) + (is_happy_hour_applied * happy_hour_discount_amount)
+
+which_discount_applied = (is_student_discount_dominant * "Student Discount") + \
+                         (is_happy_hour_applied * "Happy Hour Discount") + \
+                         (is_no_main_discount * "None")
+
+total_discounts = main_discount + large_order_discount_amount
+subtotal_after_discounts = subtotal_before_discounts - total_discounts
+service_charge = 0.10 * subtotal_after_discounts
+
+has_delivery_fee = (subtotal_after_discounts <= 100000)
+delivery_fee = has_delivery_fee * 15000
+is_delivery_free = not has_delivery_fee
+
+final_total = subtotal_after_discounts + service_charge + delivery_fee
+
+print("\n" + "="*45)
+print("                 RECEIPT                 ")
+print("="*45)
+print(f"Customer Name: {customer_name}")
+print(f"Order Time:    {order_time}:00")
+print("-"*45)
+
+print("Itemized Order:")
+print(f"- {dish1_name:<20} (x{dish1_quantity}) = {dish1_total:10,.2f}")
+print(f"- {dish2_name:<20} (x{dish2_quantity}) = {dish2_total:10,.2f}")
+print(f"- {dish3_name:<20} (x{dish3_quantity}) = {dish3_total:10,.2f}")
+print("-"*45)
+
+print(f"{'Subtotal before discounts:':<32} {subtotal_before_discounts:10,.2f}")
+print("-"*45)
+
+print("Discount Analysis:")
+print(f"- Student discount eligible: {is_eligible_for_student_discount}")
+print(f"- Happy hour eligible:       {is_eligible_for_happy_hour}")
+print(f"- Large order eligible:      {is_eligible_for_large_order}")
+print(f"\n- Discount Applied: {which_discount_applied} ({main_discount:,.2f})")
+print("-"*45)
+
+print(f"{'Total discounts:':<32} {-total_discounts:10,.2f}")
+print(f"{'Subtotal after discounts:':<32} {subtotal_after_discounts:10,.2f}")
+print("-"*45)
+
+print(f"{'Service charge (10%):':<32} {service_charge:10,.2f}")
+print(f"- Delivery is free:          {is_delivery_free}")
+print(f"{'Delivery fee:':<32} {delivery_fee:10,.2f}")
+print("="*45)
+
+print(f"{'FINAL TOTAL:':<32} {final_total:10,.2f}")
+print(f"{'Total amount saved:':<32} {total_discounts:10,.2f}")
+print("="*45)
