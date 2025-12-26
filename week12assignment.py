@@ -15,5 +15,4 @@ def calculate_total(filename):
     print(f"Total Items: {item_count}")
     print(f"Total Spent: ${total_spent:.2f}")
 
-
 calculate_total("expenses.txt")
